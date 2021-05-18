@@ -1,14 +1,20 @@
 package com.example.kotlin1hw1.ui
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.example.kotlin1hw1.R
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main.edit_text
 
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var result : ActivityResultLauncher<Intent>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,9 +25,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun getData() {
-        val intent = intent
-        val data = intent.getStringExtra("key")
-        edit_text.setText(data)
+        result =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+                if (result.resultCode == Activity.RESULT_OK) {
+
+                    val data = result.data
+                    edit_text.setText(data?.getStringExtra("key"))
+                }
+            }
     }
 
     private fun sendData() {
@@ -31,14 +42,12 @@ class MainActivity : AppCompatActivity() {
 
             } else {
                 val data  = edit_text.text.toString()
-                val intent = Intent(this, SecondActivity::class.java)
-                    intent.putExtra("key", data)
-                    intent.putExtra("key2", data)
-                    startActivity(intent)
-
+                result.launch(Intent(this, SecondActivity::class.java)
+                    .putExtra("key", data))
             }
         }
     }
+
 }
 
 //ДЗ: На первой активити добавить EditText + Button, при вводе если значения в
