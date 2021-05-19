@@ -15,6 +15,7 @@ import kotlinx.android.synthetic.main.activity_main.edit_text
 class MainActivity : AppCompatActivity() {
 
     private lateinit var result : ActivityResultLauncher<Intent>
+    private val textToast = "Please enter data"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,7 +31,7 @@ class MainActivity : AppCompatActivity() {
                 if (result.resultCode == Activity.RESULT_OK) {
 
                     val data = result.data
-                    edit_text.setText(data?.getStringExtra("key"))
+                    edit_text.setText(data?.getStringExtra(KEY))
                 }
             }
     }
@@ -38,14 +39,18 @@ class MainActivity : AppCompatActivity() {
     private fun sendData() {
         btn_send.setOnClickListener {
             if (edit_text.length() == 0) {
-                Toast.makeText(this, "Please enter data", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, textToast, Toast.LENGTH_SHORT).show()
 
             } else {
                 val data  = edit_text.text.toString()
                 result.launch(Intent(this, SecondActivity::class.java)
-                    .putExtra("key", data))
+                    .putExtra(KEY, data))
             }
         }
+    }
+
+    companion object {
+        const val KEY = "key"
     }
 
 }

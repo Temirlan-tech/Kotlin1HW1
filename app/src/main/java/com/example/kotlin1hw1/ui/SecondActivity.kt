@@ -11,6 +11,8 @@ import kotlinx.android.synthetic.main.activity_second.edit_text
 
 class SecondActivity : AppCompatActivity() {
 
+    private val textToast = "Please enter data"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_second)
@@ -22,11 +24,11 @@ class SecondActivity : AppCompatActivity() {
     private fun sendData() {
         btn_second.setOnClickListener {
             if (edit_text.length() == 0) {
-                Toast.makeText(this, "Please enter data", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, textToast, Toast.LENGTH_SHORT).show()
 
             } else {
                 val data = edit_text.text.toString()
-                setResult(Activity.RESULT_OK, Intent().putExtra("key", data))
+                setResult(Activity.RESULT_OK, Intent().putExtra(MainActivity.KEY, data))
                 finish()
             }
         }
@@ -35,7 +37,7 @@ class SecondActivity : AppCompatActivity() {
     private fun getData() {
         val intent = intent
 
-        val data = intent.getStringExtra("key").toString()
+        val data = intent.getStringExtra(MainActivity.KEY).toString()
         text_view.text = data
         edit_text.setText(data)
     }
